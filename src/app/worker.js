@@ -21,7 +21,7 @@ self.addEventListener("message", async (event) => {
   });
 
   const context =
-    "word and phrase completions for an educational search engine for teachers: ";
+    "word and phrase completions for an educational search engine for teachers, looking for resources: ";
   let output = await generator(context + event.data.text, {
     temperature: 0.4,
     max_new_tokens: 3,

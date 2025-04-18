@@ -49,7 +49,7 @@ export default function Home() {
       </h2>
 
       <input
-        className="w-full max-w-xs p-2 border border-gray-300 rounded mb-4"
+        className="w-md max-w-xs p-2 border border-gray-300 rounded mb-4"
         type="text"
         placeholder="Enter text here"
         onInput={(e) => {
@@ -58,9 +58,16 @@ export default function Home() {
       />
 
       {ready !== null && (
-        <pre className="bg-black-100 p-2 rounded">
+        <div
+          className="bg-black-100 p-2 rounded"
+          style={{
+            maxWidth: "80%",
+            overflowX: "auto",
+            fontFamily: "monospace",
+          }}
+        >
           {!ready || !result ? "Loading..." : JSON.stringify(result, null, 2)}
-        </pre>
+        </div>
       )}
     </main>
   );
