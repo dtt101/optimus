@@ -38,8 +38,8 @@ async function processQueue() {
       postMessage(x);
     });
 
-    const context = `Complete the British‑curriculum TEACHER search query with ONE or TWO key words.\n
-      +  Partial query: `;
+    const context =
+      "Complete the British‑curriculum TEACHER search query with ONE or TWO key words. Partial query: ";
 
     const output = await generator(context + text, {
       temperature: 0.2,
