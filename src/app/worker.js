@@ -38,14 +38,16 @@ async function processQueue() {
       postMessage(x);
     });
 
-    const context =
-      "suggest one or two words to complete a search term for an educational search engine for teachers, looking for resources: ";
+    const context = `Complete the British‑curriculum TEACHER search query with ONE or TWO key words.\n
+      +  Partial query: `;
 
     const output = await generator(context + text, {
-      temperature: 0.4,
-      max_new_tokens: 3,
-      repetition_penalty: 1.2,
-      no_repeat_ngram_size: 2,
+      temperature: 0.2,
+      max_new_tokens: 4,
+      top_k: 40,
+      top_p: 0.9,
+      repetition_penalty: 1.1,
+      stop_sequences: ["\n"],
     });
 
     const fullText = output[0].generated_text
