@@ -24,7 +24,7 @@ export default function Home() {
           setReady(true);
           break;
         case "complete":
-          setResult(e.data.output[0]);
+          setResult(e.data.output);
           break;
       }
     };

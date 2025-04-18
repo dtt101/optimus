@@ -9,7 +9,10 @@ class PipelineSingleton {
 
   static async getInstance(progress_callback = null) {
     if (this.instance === null) {
-      this.instance = pipeline(this.task, this.model, { progress_callback });
+      this.instance = pipeline(this.task, this.model, {
+        progress_callback,
+        dtype: "fp32",
+      });
     }
     return this.instance;
   }
@@ -21,7 +24,7 @@ self.addEventListener("message", async (event) => {
   });
 
   const context =
-    "word and phrase completions for an educational search engine for teachers, looking for resources: ";
+    "suggest one or two words to complete a search term for an educational search engine for teachers, looking for resources: ";
   let output = await generator(context + event.data.text, {
     temperature: 0.4,
     max_new_tokens: 3,
@@ -29,8 +32,12 @@ self.addEventListener("message", async (event) => {
     no_repeat_ngram_size: 2,
   });
 
+  let fullText = output[0].generated_text
+    .substring(context.length)
+    .replace(/\n/g, "")
+    .trim();
   self.postMessage({
     status: "complete",
-    output: output,
+    output: fullText,
   });
 });
