@@ -1,9 +1,7 @@
 import { pipeline, env } from "@huggingface/transformers";
 
-// Skip local model check
 env.allowLocalModels = false;
 
-// Use the Singleton pattern to enable lazy construction of the pipeline.
 class PipelineSingleton {
   static task = "text-generation";
   static model = "Xenova/distilgpt2";
@@ -17,26 +15,20 @@ class PipelineSingleton {
   }
 }
 
-// Listen for messages from the main thread
 self.addEventListener("message", async (event) => {
-  // Retrieve the classification pipeline. When called for the first time,
-  // this will load the pipeline and save it for future use.
   let generator = await PipelineSingleton.getInstance((x) => {
-    // We also add a progress callback to the pipeline so that we can
-    // track model loading.
     self.postMessage(x);
   });
 
-  // Actually perform the generation
-  const context = "educational search suggestions for teachers: ";
+  const context =
+    "word and phrase completions for an educational search engine for teachers: ";
   let output = await generator(context + event.data.text, {
     temperature: 0.4,
-    max_new_tokens: 7,
+    max_new_tokens: 3,
     repetition_penalty: 1.2,
     no_repeat_ngram_size: 2,
   });
 
-  // Send the output back to the main thread
   self.postMessage({
     status: "complete",
     output: output,
