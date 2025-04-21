@@ -4,7 +4,7 @@ env.allowLocalModels = false;
 
 class PipelineSingleton {
   static task = "text-generation";
-  static model = "Xenova/distilgpt2";
+  static model = "dtt101/ft-distilgpt2-edu-onnx"; //"Xenova/distilgpt2";
   static instance = null;
   static isGenerating = false;
 
