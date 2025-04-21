@@ -42,11 +42,10 @@ async function processQueue() {
       "Complete the British‑curriculum TEACHER search query with ONE or TWO key words. Partial query: ";
 
     const output = await generator(context + text, {
-      temperature: 0.2,
-      max_new_tokens: 4,
-      top_k: 40,
-      top_p: 0.9,
-      repetition_penalty: 1.1,
+      temperature: 0,
+      max_new_tokens: 3,
+      // top_p: 0.85,
+      // repetition_penalty: 1.05,
       stop_sequences: ["\n"],
     });
 
