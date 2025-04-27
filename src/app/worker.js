@@ -4,7 +4,7 @@ env.allowLocalModels = false;
 
 class PipelineSingleton {
   static task = "text-generation";
-  static model = "dtt101/ft-distilgpt2-edu-onnx"; //"Xenova/distilgpt2";
+  static model = "dtt101/ft-gpt2-edu-onnx-int8";
   static instance = null;
   static isGenerating = false;
 
@@ -13,7 +13,8 @@ class PipelineSingleton {
       try {
         this.instance = pipeline(this.task, this.model, {
           progress_callback,
-          dtype: "fp32",
+          quantized: true,
+          dtype: "int8",
         });
       } catch (error) {
         console.error("Error initializing model:", error);
@@ -38,21 +39,21 @@ async function processQueue() {
       postMessage(x);
     });
 
-    const context =
-      "Complete the British‑curriculum TEACHER search query with ONE or TWO key words. Partial query: ";
+    const prompt = `<QUERY> ${text.trim()} <ANS> `;
 
-    const output = await generator(context + text, {
-      temperature: 0.1,
-      max_new_tokens: 2,
-      // top_p: 0.85,
+    const output = await generator(prompt, {
+      do_sample: true,
+      top_k: 40,
+      top_p: 0.9,
+      temperature: 0.7,
+      max_new_tokens: 4, // room for two full words
+      min_new_tokens: 2, // forces at least 2 tokens → fewer fragments
       repetition_penalty: 1.05,
-      stop_sequences: ["\n"],
+      stop: ["\n", "<|endoftext|>"],
+      return_full_text: false, // we’ll get only the completion
     });
 
-    const fullText = output[0].generated_text
-      .substring(context.length)
-      .replace(/\n/g, "")
-      .trim();
+    const fullText = output[0].generated_text.replace(/\n/g, "").trim();
 
     postMessage({
       status: "complete",
